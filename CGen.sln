@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CGen", "CGen\CGen.csproj", "{044CA892-FEA3-43E0-8648-8A8394D8DF9E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CGen", "CGen\CGen.csproj", "{F1D5E6B1-B0B5-46FB-BF8F-DE12C2D7CA0D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CGen.Generator", "CGen.Generator\CGen.Generator.csproj", "{2E69EC4E-B336-4BCE-994F-21886BD0CAA2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{044CA892-FEA3-43E0-8648-8A8394D8DF9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{044CA892-FEA3-43E0-8648-8A8394D8DF9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{044CA892-FEA3-43E0-8648-8A8394D8DF9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{044CA892-FEA3-43E0-8648-8A8394D8DF9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1D5E6B1-B0B5-46FB-BF8F-DE12C2D7CA0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1D5E6B1-B0B5-46FB-BF8F-DE12C2D7CA0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1D5E6B1-B0B5-46FB-BF8F-DE12C2D7CA0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1D5E6B1-B0B5-46FB-BF8F-DE12C2D7CA0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E69EC4E-B336-4BCE-994F-21886BD0CAA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E69EC4E-B336-4BCE-994F-21886BD0CAA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E69EC4E-B336-4BCE-994F-21886BD0CAA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E69EC4E-B336-4BCE-994F-21886BD0CAA2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

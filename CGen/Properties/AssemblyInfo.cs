@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("CGen")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("CGen Code Generator Class Library")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Shanaka Rusith")]
 [assembly: AssemblyProduct("CGen")]
-[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyCopyright("Copyright Shanaka Rusith ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("044ca892-fea3-43e0-8648-8a8394d8df9e")]
+[assembly: Guid("f1d5e6b1-b0b5-46fb-bf8f-de12c2d7ca0d")]
 
 // Version information for an assembly consists of the following four values:
 //

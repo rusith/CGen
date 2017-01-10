@@ -1,28 +1,31 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using CGen.Properties;
 
 namespace CGen.Base
 {
     public class Templates
     {
-        private static Templates _object;
+        private static Templates _object = null;
         private Dictionary<string, Template>  _templates;
              
-        private Templates()
+        private Templates(string str)
         {
             ReadTemplate();   
         }
 
-        public static Templates All => _object ?? (_object = new Templates());
+        public static Templates All
+        {
+            
+            get { return new Templates(""); }
+        } 
 
         private void ReadTemplate()
         {
-            const string templateFile = "\\Templates\\templates";
-            if(!File.Exists(templateFile))
-                return;
-            var lines = File.ReadLines(templateFile).ToList();
+            var lines = Resources.templates.Split(new [] { Environment.NewLine },StringSplitOptions.None).ToList();
             if(lines.Count<1)
                 return;
 
@@ -31,13 +34,27 @@ namespace CGen.Base
             for (var i = 0; i < lines.Count; i++)
             {
                 var line = lines[i];
-                string currentTemplateName;
-                if (!line.StartsWith("##") || line.Length <= 2 ||
-                    string.IsNullOrWhiteSpace(currentTemplateName = line.Substring(2, line.Length - 1))) continue;
 
-                var currentTemplateBuilder = new StringBuilder();
-                while (line == "###" || i>=(lines.Count-1))
+                if(line.Length<=2 || !line.StartsWith("##"))
+                    continue;
+
+                var currentTemplateName = line.Substring(2);
+                var tabCount = 0;
+                if (currentTemplateName.Contains("$"))
                 {
+                    var index = currentTemplateName.IndexOf("$", StringComparison.Ordinal)+1;
+                    tabCount = int.Parse(currentTemplateName.Substring(index));
+                }
+                var currentTemplateBuilder = new StringBuilder();
+                string tabs = null;
+                while (i<(lines.Count-1))
+                {
+                    line = lines[i];
+                    if (line == "###")
+                        break;
+                    
+                    if (tabCount > 0)
+                        currentTemplateBuilder.Append(tabs == null ? (tabs = CreateTabs(tabCount)) : tabs);
                     currentTemplateBuilder.AppendLine(line);
                     i++;
                 }
@@ -51,5 +68,15 @@ namespace CGen.Base
         /// <param name="name">name of the template </param>
         /// <returns></returns>
         public Template this[string name] => _templates[name];
+
+        private static string CreateTabs(int count)
+        {
+            if (count < 1)
+                return "";
+            var builder = new StringBuilder();
+            for (var i = 0; i < count; i++)
+                builder.Append("\t");
+            return builder.ToString();
+        }
     }
 }

@@ -1,0 +1,112 @@
+##ICONNECTIONMANAGER$3
+internal interface IConnectionManager
+{
+    void Unsubscribe(IDbContext context);
+}
+###
+##ICONNECTIONCONTAINER$3
+internal interface IConnectionContainer
+{
+    IDbConnection Connection { get; set; }
+    IDbContext Context { get; set; }
+    void Close(IDbContext context);
+}
+###
+##IDBCONTEXT$3
+public interface IDbContext : IDisposable
+{
+	#region Properties
+
+	IUnitOfWork Unit { get; set;}
+
+	#endregion
+
+	#region Methods
+
+    void SaveChanges();
+    T Get<T>(object key,string tableName, string primarykeyName) where T :  Entity;
+    List<T> Get<T>(string tableName) where T :  Entity;
+    Entity Add(Entity entity,string tableName,Dictionary<string,object> columns);
+    void DeleteRange<T>(IEnumerable<Entity> entities, string tableName, string primaryKeyName) where T: Entity;
+    List<T> Find<T>(Func<T, bool> predicate, string tableName) where T :  Entity;
+	List<T> Where<T>(object values,string tableName) where T :  Entity;
+    int Count(string tableName);
+	void Delete<T>(Entity entity,string tableName, string primaryKeyName) where T: Entity;
+    void Delete<T>(object key,string tableName, string primaryKeyName) where T: Entity;
+	List<T> QueryView<T>(string viewname, object where = null) where T : class;
+	List<T> Query<T>(string sql) where T : class;
+	List<T> SelectPage<T>(string tableName,int pageSize,int page,string primaryKeyName) where T : Entity;
+	T First<T>(string tableName,string primaryKeyName) where T : Entity;
+	void AddEntityReference(Entity parent,Entity child,string column);
+
+	#endregion
+}
+###
+##IUNITOFWORK$3
+public interface IUnitOfWork : IDisposable
+{
+	#region Repositories
+
+	$repositories$
+
+	#endregion
+
+	#region Methods
+
+    void Complete();
+
+	#endregion
+}
+###
+##DAL
+namespace $projectNs$
+{
+	namespace $projectNs$.Base 
+	{
+		namespace $projectNs$.Base.Core
+		{
+			$iConnctionContainer$
+			$iConnectionManager$
+			$iDbContext$
+			$iUnitOfWork$
+		}
+
+		namespace $projectNs$.Base.Implementation
+		{
+			$boCollection$
+			$connectionCOntainer$
+			$connectionManager$
+			$context$
+			$unitOfWork$
+		}
+	}
+
+	namespace $projectNs$.Objects
+	{
+		namespace $projectNs$.Objects.Implementation
+		{
+			$bos$
+		}
+		
+		namespace $projectNs$.Objects.SPs
+		{
+			$sps$
+		}
+
+		namespace $projectNs$.Objects.Views
+		{
+			$views$
+		}
+	}
+
+	namespace $projectNs$.Repositories
+	{
+		namespace $projectNs$.Repositories
+		{
+			
+		}
+	}
+
+
+}
+###

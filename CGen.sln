@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CGen", "CGen\CGen.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CGen.Generator", "CGen.Generator\CGen.Generator.csproj", "{2E69EC4E-B336-4BCE-994F-21886BD0CAA2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NGen.Tests", "NGen.Tests\NGen.Tests.csproj", "{62AC3371-F521-4423-9809-4F8DE26AEAC0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TemplateManager", "TemplateManager\TemplateManager.csproj", "{81C1FBA2-39F9-4D40-86B2-CE4BDCA9A585}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{2E69EC4E-B336-4BCE-994F-21886BD0CAA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E69EC4E-B336-4BCE-994F-21886BD0CAA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E69EC4E-B336-4BCE-994F-21886BD0CAA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62AC3371-F521-4423-9809-4F8DE26AEAC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62AC3371-F521-4423-9809-4F8DE26AEAC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62AC3371-F521-4423-9809-4F8DE26AEAC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62AC3371-F521-4423-9809-4F8DE26AEAC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81C1FBA2-39F9-4D40-86B2-CE4BDCA9A585}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81C1FBA2-39F9-4D40-86B2-CE4BDCA9A585}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81C1FBA2-39F9-4D40-86B2-CE4BDCA9A585}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81C1FBA2-39F9-4D40-86B2-CE4BDCA9A585}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

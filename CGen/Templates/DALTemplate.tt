@@ -1,0 +1,598 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="DatabaseSchemaReader.DataSchema" #>
+<#@ import namespace="DatabaseSchemaReader" #>
+<#@ import namespace="CGen.Extensions" #>
+
+
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
+using Dapper;
+
+using <#=_settings.ProjectNamespace#>.Base;
+using <#=_settings.ProjectNamespace#>.Filters;
+using <#=_settings.ProjectNamespace#>.Filters.Base;
+using <#=_settings.ProjectNamespace#>.Objects;
+
+namespace <#=_settings.ProjectNamespace#>
+{
+	namespace Base
+    {
+		internal class ObjectCache
+        {
+            private static readonly List<TableItem> Cache = new List<TableItem>();
+
+            internal static T Get<T>(string tableName, string primaryKeyValue) where T:class
+            {
+                var table = Cache.FirstOrDefault(c => c.TableName == tableName);
+                var selected = table?.Items.FirstOrDefault(c => c.PrimayKeyValue == primaryKeyValue);
+                return selected?.Object as T;
+            }
+
+            internal static void Add(string tableName, string primaryKeyValue, ObjectBase obj)
+            {
+                var table = Cache.FirstOrDefault(c => c.TableName == tableName) ?? new TableItem();
+                var ob = table.Items.FirstOrDefault(p => p.PrimayKeyValue == primaryKeyValue);
+                ob?.Object.Copy(obj);
+            }
+
+            private class TableItem
+            {
+                public TableItem()
+                {
+                    Items = new List<Item>();
+                }
+
+                public string TableName { get; set; }
+                public List<Item> Items { get; set; }
+            }
+
+            private class Item
+            {
+                public string PrimayKeyValue { get; set; }
+                public ObjectBase Object { get; set; }
+            }
+        }
+
+		internal class DatabaseConnectionManager
+        {
+            #region Fields
+
+            private readonly static HashSet<TestingDataAccessContext> ContextsThatGotTheConnection = new HashSet<TestingDataAccessContext>();
+            private static IDbConnection _connection;
+
+            #endregion
+
+            #region Internal Methods
+
+            internal static IDbConnection GetConnection(TestingDataAccessContext context)
+            {
+                if (_connection == null)
+                {
+                    var connecctionstring = ConfigurationManager.ConnectionStrings["<#=_settings.ProjectName#>Connection"].ConnectionString;
+                    if (string.IsNullOrWhiteSpace(connecctionstring))
+                        throw new Exception("Cannot Create Connection because the connection string is not present in the application configuration ");
+                    _connection = new SqlConnection(connecctionstring);
+                }
+
+                if(_connection.State != ConnectionState.Open)
+                    _connection.Open();
+
+                ContextsThatGotTheConnection.Add(context);
+                return _connection;
+            }
+
+            internal static void IamDisposing(TestingDataAccessContext context)
+            {
+                ContextsThatGotTheConnection.Remove(context);
+                if (ContextsThatGotTheConnection.Count >= 1 || _connection.State == ConnectionState.Closed)
+                    return;
+                _connection.Close();
+            }
+
+            internal static TestingDataAccessContext GetLastContext()
+            {
+                if(ContextsThatGotTheConnection.Count<1)
+                    throw new Exception("Context not created");
+                return ContextsThatGotTheConnection.Last();
+            }
+
+            #endregion
+        }
+
+		/// <summary>
+        /// Provides an interface to access database 
+        /// should be placed inside an using block
+        /// </summary>
+        public class TestingDataAccessContext : IDisposable
+        {
+            #region Fields
+
+            private IDbConnection _connection;
+
+            #endregion
+
+            #region Constructors
+
+            /// <summary>
+            /// Creates new context
+            /// </summary>
+            public TestingDataAccessContext()
+            {
+                var fromConnectionMager = DatabaseConnectionManager.GetConnection(this);
+                _connection = fromConnectionMager;
+            }
+
+            #endregion
+
+            #region Methods
+
+            internal T Get<T>(string tableName, string primaryKeyName, object primaryKeyValue) where T:  ObjectBase
+            {
+                var fromCache = ObjectCache.Get<T>(tableName, primaryKeyValue.ToString());
+                if (fromCache != null)
+                    return fromCache;
+                const string query = @"SELECT TOP 1
+                                    *
+                                FROM [dbo].[{0}]
+                                WHERE [{1}] = '{2}';";
+                var item = _connection.QueryFirstOrDefault<T>(
+                    string.Format(query, tableName, primaryKeyName, primaryKeyValue)
+                    );
+
+
+                if (item == null)
+                    return null;
+                new List<string>().ForEach(s => s.ToLower());
+                ObjectCache.Add(tableName,primaryKeyValue.ToString(),item);
+                return item;
+            }
+
+            internal List<T> Get<T>(string tableName, Stack<Filter> filters, int limit)
+            {
+                var whereBuilder = new StringBuilder("");
+                var orderByBuilder = new StringBuilder("");
+
+                while (filters.Count > 0)
+                {
+                    var filter = filters.Pop();
+                    if (filter is ValueFilter)
+                    {
+                        var stringFilter = filter as ValueFilter;
+                        var attribute = stringFilter.FilteredAttribute;
+
+                        var expressions = stringFilter.Expressions;
+                        foreach (var expression in expressions)
+                        {
+                            if (expression.Type == ExpressionType.OrderByThis)
+                            {
+                                var singleValuedExpression = expression as SingleValuedExpression;
+                                if (singleValuedExpression != null)
+                                    orderByBuilder.Append(orderByBuilder.Length < 1 ? "": "," + attribute + " " +
+                                                          singleValuedExpression.Value);
+                            }
+                            else
+                                whereBuilder.Append(expression.GetExpressionText(attribute));
+                        }
+                    }
+                    else if (filter is OrFilter)
+                        whereBuilder.Append(" OR ");
+                }
+
+                var limitString = "";
+                if (limit > 0)
+                    limitString = "TOP " + limit;
+
+                var query = string.Format(@" SELECT {0} * 
+                              FROM [{1}]
+                              {2} {3}", limitString, tableName, whereBuilder.Length > 0 ? " WHERE " + whereBuilder:"", orderByBuilder.Length > 0 ? " ORDER BY "+orderByBuilder:"");
+
+                return _connection.Query<T>(query).ToList();
+            } 
+
+            public void Dispose()
+            {
+                DatabaseConnectionManager.IamDisposing(this);
+            }
+
+            #endregion
+        }
+	}
+
+	<# 
+	var databaseReader = new DatabaseReader(_settings.ConnectionString, "System.Data.SqlClient");
+	var schema = databaseReader.ReadAll();
+	#>
+
+	namespace Objects
+    {
+	    public abstract class ObjectBase
+        {
+            protected TestingDataAccessContext DALObjectBaseContext;
+            internal ObjectState State { get; set; }
+
+            internal virtual void Copy(ObjectBase obj)
+            {
+                
+            }
+        }
+
+		public enum ObjectState
+        {
+            Normal =1,
+            InDatabase =2,
+            Deleted = 3
+        }
+
+		<# foreach(var table in schema.Tables) {#>
+		public class <#=table.Name#> : ObjectBase
+        {
+			<#
+			var forignKeyColumns = table.Columns.Where(c => c.IsForeignKey).ToList();
+			#>
+
+			<#foreach(var column in table.Columns){#>
+			private <#=column.GetDataType(true)#> <#=column.GetFieldName(true)#>;
+			<#}#>
+
+			<#foreach(var column in forignKeyColumns){#>
+			private <#=column.GetDataType(false)#> <#=column.GetFieldName(false)#>;
+			<#}#>
+
+
+			<#foreach(var column in table.Columns){#>
+			public <#=column.GetDataType(true)#> <#=column.Name#> { get; set; } 
+			<#}#>
+
+			<#foreach(var column in forignKeyColumns){#>
+			public <#=column.GetDataType(false)#> <#="Obj"+column.Name#> 
+			{ 
+				get
+				{
+					return <#=column.GetFieldName(true)#> ?? (<#=column.GetFieldName(true)#> = DALObjectBaseContext.Get<<#=column.ForeignKeyTable.Name#>>("<#=column.ForeignKeyTable.Name#>", "<#=column.ForeignKeyTable.PrimaryKeyColumn.Name#>", <#=column.ForeignKeyTable.Name#>));
+				}
+				set
+				{
+					//to be added
+				} 
+			}
+			<#}#>
+
+            /// <summary>
+            /// Creates new <#=table.Name#> object using latest context 
+            /// </summary>
+            public <#=table.Name#>()
+            {
+                DALObjectBaseContext = DatabaseConnectionManager.GetLastContext();
+            }
+
+			<#DatabaseColumn primaryKeyColumn = null ;#>
+			<#if(table.PrimaryKeyColumn != null){#>
+				<#primaryKeyColumn = table.PrimaryKeyColumn;#>
+				<#var key = primaryKeyColumn.Name.FirstCharLower();#>
+			public static <#=table.Name#> Get(<#=primaryKeyColumn.DataType.NetDataTypeCSharpName#> <#=key#>)
+            {
+                var context = DatabaseConnectionManager.GetLastContext();
+				if(context==null)
+					return null;
+
+                var obj = context.Get<<#=table.Name#>>("<#=table.Name#>", "<#=primaryKeyColumn.Name#>", <#=key#>);
+                obj.State = ObjectState.InDatabase;
+                return obj;
+            }
+			<#}#>
+           
+
+            public static <#=table.Name#>Filter Get()
+            {
+                return new <#=table.Name#>Filter();
+            }
+
+			<#var tableNameFirstCharLower= table.Name.FirstCharLower();#>
+            public static void Delete(<#=table.Name#> <#=tableNameFirstCharLower#>ToDelete)
+            {
+				//to be implemented
+            }
+
+            internal static List<<#=table.Name#>> Filter(Stack<Filter> filters,int limit)
+            {
+                var context = DatabaseConnectionManager.GetLastContext();
+                var objects = context.Get<<#=table.Name#>>("<#=table.Name#>",filters,limit);
+                foreach (var obj in objects)
+                    ObjectCache.Add("<#=table.Name#>",obj.<#=primaryKeyColumn.Name#>.ToString(),obj);
+                return objects;
+            } 
+        }	
+		<#}/*for each table*/#>
+
+	}
+	namespace Filters
+    {
+		namespace Base
+        {
+		    internal enum ExpressionType
+            {
+                StartsWith = 1,
+                EndsWith = 2,
+                Contains = 3,
+                EqualsTo = 4,
+                LessThan = 5,
+                GraterThan = 6,
+                Between = 7,
+                In = 8,
+                Or = 9,
+                And = 10,
+                OrderByThis = 11
+            }
+
+            internal class Expression
+            {
+                public ExpressionType Type { get; set; }
+
+                internal virtual string GetExpressionText(string attributeName)
+                {
+                    switch (Type)
+                    {
+                         case ExpressionType.Or:
+                            return " OR ";
+                        case ExpressionType.And:
+                            return " AND ";
+                        default:
+                            return "";
+                    }
+                }
+            }
+
+            internal class SingleValuedExpression : Expression
+            {
+                public object Value { get; set; }
+
+                internal override string GetExpressionText(string attributeName)
+                {
+                    switch (Type)
+                    {
+                        case ExpressionType.StartsWith:
+                            return " [" + attributeName + "] LIKE '" + Value + "%' ";
+                        case ExpressionType.EndsWith:
+                            return " [" + attributeName + "] LIKE '%" + Value + "' ";
+                        case ExpressionType.Contains:
+                            return " [" + attributeName + "] LIKE '%" + Value + "%' ";
+                        case ExpressionType.EqualsTo:
+                            return " [" + attributeName + "] = '" + Value + "' ";
+                        case ExpressionType.GraterThan:
+                            return " [" + attributeName + "] > '" + Value + "' ";
+                        case ExpressionType.LessThan:
+                            return " [" + attributeName + "] < '" + Value + "' ";
+                        default:
+                            return "";
+                    }
+                }
+            }
+
+            internal class MultiValuedExpression : Expression
+            {
+                public List<object> Values { get; set; }
+
+                internal override string GetExpressionText(string attributeName)
+                {
+                    switch (Type)
+                    {
+                        case ExpressionType.Between:
+                            return " [" + attributeName + "] BETWEEN '" + Values[0] + "' AND '"+Values[1]+"' ";
+                        case ExpressionType.In:
+                            return " [" + attributeName + "] IN(" + Values.Aggregate((c, n) => c + "'" + n + "'") + ") ";
+                        default:
+                            return "";
+                    }
+                }
+            }
+
+            public class Filter
+            {
+                
+            }
+
+            public class ValueFilter : Filter
+            {
+                internal Stack<Expression> Expressions;
+                internal string FilteredAttribute;
+            }
+
+            public class OrFilter : Filter
+            {
+                
+            }
+
+            public class AndFilter : Filter
+            {
+                
+            }
+
+            public class StringFilter<T> : ValueFilter
+            {
+                internal StringFilter(T parent,string filteredAttribute)
+                {
+                    Parent = parent;
+                    Expressions = new Stack<Expression>();
+                    FilteredAttribute = filteredAttribute;
+                } 
+
+                public StringFilter<T> StartsWith(string str)
+                {
+                    var expression = new SingleValuedExpression {Type = ExpressionType.StartsWith, Value = str};
+                    if(Expressions.Count>0 && Expressions.Peek().Type!=ExpressionType.Or)
+                        Expressions.Push(new Expression {Type = ExpressionType.And});
+                    Expressions.Push(expression);
+                    return this;
+                }
+
+                public StringFilter<T> EndsWith(string str)
+                {
+                    var expression = new SingleValuedExpression { Type = ExpressionType.EndsWith, Value = str };
+                    if (Expressions.Count > 0 && Expressions.Peek().Type != ExpressionType.Or)
+                        Expressions.Push(new Expression { Type = ExpressionType.And });
+                    Expressions.Push(expression);
+                    return this;
+                }
+
+                public StringFilter<T> Contains(string str)
+                {
+                    var expression = new SingleValuedExpression { Type = ExpressionType.Contains, Value = str };
+                    if (Expressions.Count > 0 && Expressions.Peek().Type != ExpressionType.Or)
+                        Expressions.Push(new Expression { Type = ExpressionType.And });
+                    Expressions.Push(expression);
+                    return this;
+                }
+
+                public StringFilter<T> Or
+                {
+                    get
+                    {
+                        if (Expressions.Peek().Type == ExpressionType.Or)
+                            return this;
+                        Expressions.Push(new Expression {Type = ExpressionType.Or});
+                        return this;
+                    }
+                }
+
+                public StringFilter<T> OrderByThis()
+                {
+                    Expressions.Push(new Expression { Type = ExpressionType.LessThan });
+                    return this;
+                }
+                
+                public T Parent { get; }
+            }
+
+            public class NumberFilter<TP,T>: ValueFilter
+            {
+                internal NumberFilter(TP parent,string filteredAttribute)
+                {
+                    Parent = parent;
+                    Expressions = new Stack<Expression>();
+                    FilteredAttribute = filteredAttribute;
+                }
+
+                public NumberFilter<TP, T> Is(T equal)
+                {
+                    if (Expressions.Count > 0 && Expressions.Peek().Type != ExpressionType.Or)
+                        Expressions.Push(new Expression {Type = ExpressionType.And});
+                    Expressions.Push(new SingleValuedExpression() {Type = ExpressionType.EqualsTo,Value = equal});
+                    return this;
+                }
+
+                public NumberFilter<TP, T> GraterThan(T graterThan)
+                {
+                    if (Expressions.Count > 0 && Expressions.Peek().Type != ExpressionType.Or)
+                        Expressions.Push(new Expression { Type = ExpressionType.And });
+                    Expressions.Push(new SingleValuedExpression() { Type = ExpressionType.GraterThan, Value = graterThan });
+                    return this;
+                }
+
+                public NumberFilter<TP, T> LessThan(T lessThan)
+                {
+                    if (Expressions.Count > 0 && Expressions.Peek().Type != ExpressionType.Or)
+                        Expressions.Push(new Expression { Type = ExpressionType.And });
+                    Expressions.Push(new SingleValuedExpression() { Type = ExpressionType.LessThan, Value = lessThan });
+                    return this;
+                }
+
+                public NumberFilter<TP,T> Or
+                {
+                    get
+                    {
+                        if (Expressions.Peek().Type == ExpressionType.Or)
+                            return this;
+                        Expressions.Push(new Expression { Type = ExpressionType.Or });
+                        return this;
+                    }
+                }
+
+                public NumberFilter<TP, T> OrderByThis()
+                {
+                    Expressions.Push(new SingleValuedExpression() { Type = ExpressionType.OrderByThis,Value = "" });
+                    return this;
+                }
+
+                public NumberFilter<TP, T> OrderByThisDescending()
+                {
+                    Expressions.Push(new SingleValuedExpression() { Type = ExpressionType.OrderByThis, Value = " DECS " });
+                    return this;
+                }
+
+                public TP Parent { get; }
+            }
+		}
+
+		namespace ObjectFilters
+		{
+			<#foreach(var table in schema.Tables ){
+			var tableName = table.Name;
+			#>
+			
+			public class <#=tableName#>Filter
+			{
+				internal readonly Stack<Filter> Filters = new Stack<Filter>(); 
+
+				<#foreach(var column in table.Columns){
+					var dataType = column.DataType.NetDataTypeCSharpName;
+				#>
+
+				<#if(dataType == "string"){#>
+				public StringFilter<<#=tableName#>Filter> <#=column.Name#>
+				{
+					get
+					{
+						if(Filters.Count>0 &&  (Filters.Peek() is ValueFilter))
+						{
+							var valueFilter = Filters.Peek() as ValueFilter;
+							valueFilter?.Expressions.Push(new Expression {Type = ExpressionType.And});
+						}
+
+						Filters.Push(new AndFilter());
+						var filter = new StringFilter<<#=tableName#>Filter>(this,"<#=column.Name#>");
+						Filters.Push(filter);
+						return filter;
+					}
+				}
+				<#} else if(dataType == "int" || dataType == "short" || dataType == "long" || dataType == "double" || dataType == "decimal" ||  dataType == "float" ){#>
+				public NumberFilter<<#=tableName#>Filter,int> <#=column.Name#>
+				{
+					get
+					{
+						Filters.Push(new AndFilter());
+						var filter = new NumberFilter<<#=tableName#>Filter,int>(this,"<#=column.Name#>");
+						Filters.Push(filter);
+						return filter;
+					}
+				}
+				<#}#>
+				<#}#>
+				public <#=tableName#>Filter Or
+				{
+					get
+					{
+						if (Filters.Peek() is OrFilter)
+							return this;
+
+						Filters.Push(new OrFilter());
+						return this;
+					}
+				}
+
+				public List<<#=tableName#>> Filter(int limit = 0)
+				{
+					return <#=tableName#>.Filter(Filters,limit);
+				}
+			}
+			<#} /*for each table */#>
+		}
+	}
+}

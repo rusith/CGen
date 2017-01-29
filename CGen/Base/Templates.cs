@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using CGen.Models;
 using CGen.Properties;
 
 namespace CGen.Base
@@ -12,18 +13,17 @@ namespace CGen.Base
         private static Templates _object = null;
         private Dictionary<string, Template>  _templates;
              
-        private Templates(string str)
+        private Templates(NGenSettings settings)
         {
-            ReadTemplate();   
+            ReadTemplate(settings);   
         }
 
-        public static Templates All
+        public static Templates All(NGenSettings settings)
         {
-            
-            get { return new Templates(""); }
+             return _object ?? (_object = new Templates(settings)); 
         } 
 
-        private void ReadTemplate()
+        private void ReadTemplate(NGenSettings settings)
         {
             var lines = Resources.templates.Split(new [] { Environment.NewLine },StringSplitOptions.None).ToList();
             if(lines.Count<1)
@@ -47,6 +47,7 @@ namespace CGen.Base
                 }
                 var currentTemplateBuilder = new StringBuilder();
                 string tabs = null;
+                i++;
                 while (i<(lines.Count-1))
                 {
                     line = lines[i];
@@ -58,6 +59,10 @@ namespace CGen.Base
                     currentTemplateBuilder.AppendLine(line);
                     i++;
                 }
+
+                currentTemplateBuilder.Replace("$projectNs$", settings.ProjectNamespace);
+                currentTemplateBuilder.Replace("$projectName$", settings.ProjectName);
+
                 _templates.Add(currentTemplateName,new Template(currentTemplateBuilder));
             }
         }
@@ -67,7 +72,7 @@ namespace CGen.Base
         /// </summary>
         /// <param name="name">name of the template </param>
         /// <returns></returns>
-        public Template this[string name] => _templates[name];
+        public Template this[string name] => new Template(_templates[name]);
 
         private static string CreateTabs(int count)
         {

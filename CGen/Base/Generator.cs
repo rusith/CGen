@@ -1,14 +1,19 @@
 ﻿using System.Text;
-using CGen.Mobels;
+using CGen.Models;
 
 namespace CGen.Base
 {
     public class Generator
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="settings"></param>
         public static void Generate(NGenSettings settings)
         {
+            
             var fileContent = new StringBuilder();
-            var templates = Templates.All;
+            var templates = Templates.All(settings);
             var dalTemplate = templates["DAL"];
 
             //Core

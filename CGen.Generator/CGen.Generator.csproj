@@ -63,6 +63,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Settings.cs" />
+    <Compile Include="Windows\AddNewDatabaseConnection.xaml.cs">
+      <DependentUpon>AddNewDatabaseConnection.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Converters\IntToBoolConverter.cs" />
+    <Compile Include="Windows\Converters\StringToBoolConverter.cs" />
+    <Compile Include="Windows\DatabaseConnectionManager.xaml.cs">
+      <DependentUpon>DatabaseConnectionManager.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Generator.xaml.cs">
       <DependentUpon>Generator.xaml</DependentUpon>
     </Compile>
@@ -70,6 +79,17 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Windows\Models\DatabaseConnection.cs" />
+    <Compile Include="Windows\Models\GeneratorViewModel.cs" />
+    <Compile Include="Windows\Models\ModelBase.cs" />
+    <Page Include="Windows\AddNewDatabaseConnection.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\DatabaseConnectionManager.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\Generator.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -108,7 +128,12 @@
       <Project>{f1d5e6b1-b0b5-46fb-bf8f-de12c2d7ca0d}</Project>
       <Name>CGen</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TemplateManager\TemplateManager.csproj">
+      <Project>{81C1FBA2-39F9-4D40-86B2-CE4BDCA9A585}</Project>
+      <Name>TemplateManager</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

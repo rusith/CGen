@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DatabaseSchemaReader, Version=2.2.0.3, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DatabaseSchemaReader.2.2.0\lib\net45\DatabaseSchemaReader.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -40,10 +44,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\DalBuilder.cs" />
     <Compile Include="Base\Generator.cs" />
     <Compile Include="Base\Template.cs" />
     <Compile Include="Base\Templates.cs" />
-    <Compile Include="Mobels\NGenSettings.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Models\NGenSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -52,6 +58,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Resources\templates.txt" />
     <Content Include="templates.txt" />
   </ItemGroup>

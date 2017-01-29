@@ -4,11 +4,16 @@ namespace CGen.Base
 {
     public class Template
     {
-        private StringBuilder _builder;
+        private readonly StringBuilder _builder;
 
         public Template(StringBuilder str)
         {
             _builder = str;
+        }
+
+        public Template(Template template)
+        {
+            _builder = new StringBuilder(template._builder.ToString());
         }
 
         /// <summary>
@@ -25,7 +30,8 @@ namespace CGen.Base
 
         public string Build()
         {
-            return _builder.ToString();
+            var str = _builder.ToString();
+            return str;
         }
     }
 }

@@ -3,17 +3,26 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TemplateManager"
+        xmlns:m="clr-namespace:TemplateManager.Models"
         mc:Ignorable="d"
-        Title="Template Manager" Height="424.947" Width="700" Loaded="OnWindowLoaded"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}">
-    <Grid>
-        <ComboBox ItemsSource="{Binding Path=Templates}"
+        Title="Template Manager" Height="424.947" Width="872.5" Loaded="OnWindowLoaded">
+    <Window.DataContext>
+        <m:MainWindowViewModel/>
+    </Window.DataContext>
+    <Grid Margin="0,0,2,4">
+        <ComboBox Name="NameTextBox" ItemsSource="{Binding Path=Templates,Mode=TwoWay}"
                   DisplayMemberPath="Name"
                   SelectedValuePath="Name"
-                  SelectedValue="{Binding Path=CurrentTemplate}" Margin="10,10,372,362" />
-        <Button x:Name="NewButton" Content="New" HorizontalAlignment="Left" Height="27" Margin="24,354,0,0" VerticalAlignment="Top" Width="76"/>
-        <TextBox x:Name="MainTextBox" HorizontalAlignment="Left" Height="299" Margin="10,42,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="672"/>
+                  SelectedItem="{Binding Path=CurrentTemplate,Mode=TwoWay}" Margin="10,10,0,0" Height="27" VerticalAlignment="Top" HorizontalAlignment="Left" Width="308" />
+        <Button x:Name="NewButton" Content="New" HorizontalAlignment="Left" Margin="323,48,0,0" Width="76" RenderTransformOrigin="0.5,0.5" Height="27" VerticalAlignment="Top" Click="NewButton_Click"/>
+        <TextBox x:Name="MainTextBox" Margin="10,86,8,24" Text="{Binding Path=CurrentTemplate.Content, Mode=TwoWay}" AcceptsReturn="True" AcceptsTab="True" FontFamily="Fira Code"/>
+        <TextBox x:Name="TabCountTextBox" HorizontalAlignment="Left" Height="21" Margin="333,16,0,0" TextWrapping="Wrap" Text="{Binding Path=CurrentTemplate.TabCount, Mode=TwoWay}" VerticalAlignment="Top" Width="55"/>
+        <Label Content="tabs" HorizontalAlignment="Left" Height="27" Margin="390,13,0,0" VerticalAlignment="Top" Width="51"/>
+        <Button x:Name="EditInTextEditorButton" Content="Edit In Text Editor" HorizontalAlignment="Left" Height="27" Margin="431,12,0,0" VerticalAlignment="Top" Width="118" Click="EditInTextEditorButton_Click"/>
+        <Button x:Name="SaveBitton" Content="Save" HorizontalAlignment="Left" Height="27" Margin="784,12,0,0" VerticalAlignment="Top" Width="68" Click="SaveBitton_Click"/>
+        <Button x:Name="OpenButton" Content="Open" HorizontalAlignment="Left" Height="27" Margin="563,12,0,0" VerticalAlignment="Top" Width="67" Click="OpenButton_Click"/>
+        <TextBox x:Name="NewTextBox" HorizontalAlignment="Left" Height="26" Margin="10,48,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="308"/>
+        <Button x:Name="DeleteButton" Content="Delete" HorizontalAlignment="Left" Margin="414,48,0,0" Width="76" RenderTransformOrigin="0.5,0.5" Height="27" VerticalAlignment="Top" Click="DeleteButton_Click"/>
 
     </Grid>
 </Window>

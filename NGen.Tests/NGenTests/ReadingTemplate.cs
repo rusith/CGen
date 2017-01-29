@@ -9,7 +9,11 @@ namespace NGen.Tests.NGenTests
         [TestMethod]
         public void ReadTemplate()
         {
-            var templates = Templates.All;
+            var i = 50;
+            var a = i << 5;
+            //var b = i*32;
+
+            // var templates = Templates.All;
         }
     }
 }

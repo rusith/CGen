@@ -1,9 +1,13 @@
 ﻿namespace TemplateManager.Models
 {
-    public class Template
+    public class Template:ModelBase
     {
-        public string Name { get; set; }
-        public string Content { get; set; }
-        public int TabCount { get; set; }
+        private string _name;
+        private string _content;
+        private int _tabCount;
+
+        public string Name { get { return _name; } set { _name = value;OnPropertyChanged("Name"); } }
+        public string Content { get { return _content; } set { _content = value;OnPropertyChanged("Content"); } }
+        public int TabCount { get { return _tabCount; } set { _tabCount = value;OnPropertyChanged("TabCount"); } }
     }
 }

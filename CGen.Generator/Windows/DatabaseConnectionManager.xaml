@@ -1,0 +1,31 @@
+﻿<controls:MetroWindow x:Class="CGen.Generator.Windows.DatabaseConnectionManager"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+        mc:Ignorable="d"
+         xmlns:converters ="clr-namespace:CGen.Generator.Windows.Converters"
+        xmlns:models="clr-namespace:CGen.Generator.Windows.Models"
+        Title="DatabaseConnectionManager" Height="318" Width="796.5">
+    <Window.DataContext>
+        <models:GeneratorViewModel/>
+    </Window.DataContext>
+    <controls:MetroWindow.Resources>
+        <converters:IntToBoolConverter x:Key="IntToBoolConverter"/>
+    </controls:MetroWindow.Resources>
+    <Grid>
+        <ListView x:Name="ConnectionListView" Height="202" SelectedItem="{Binding Path=SelectedDatabaseConnection,Mode=TwoWay}" Margin="10,10,10,0" VerticalAlignment="Top" ItemsSource="{Binding Path=DatabaseConnections,Mode=TwoWay}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Path=Name}" Width="150"/>
+                    <GridViewColumn Header="Connection String" DisplayMemberBinding="{Binding Path=ConnectionString}" Width="500"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button x:Name="RemoveButton" Content="Remove" HorizontalAlignment="Right" Margin="0,0,10,10" Width="75" Height="27" VerticalAlignment="Bottom" ToolTip="Remove" Click="OnRemoveButtonClick" IsEnabled="{Binding SelectedIndex, Converter={StaticResource IntToBoolConverter}, ElementName=ConnectionListView}"/>
+        <Button x:Name="EditButton" Content="Edit" Margin="0,0,95,10" HorizontalAlignment="Right" Width="75" Height="27" VerticalAlignment="Bottom" ToolTip="Edit Database connection" Click="OnEditButtonClick" IsEnabled="{Binding SelectedIndex, Converter={StaticResource IntToBoolConverter}, ElementName=ConnectionListView}"/>
+        <Button x:Name="AddButton" Content="Add" HorizontalAlignment="Right" Margin="0,0,178,10" Width="75" Height="27" VerticalAlignment="Bottom" ToolTip="Add new database " Click="OnAddButtonClick"/>
+
+    </Grid>
+</controls:MetroWindow>

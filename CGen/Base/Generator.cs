@@ -1,29 +1,24 @@
-﻿using System.Text;
+﻿using System;
+using System.IO;
 using CGen.Models;
+using CGen.Templates;
 
 namespace CGen.Base
 {
     public class Generator
     {
         /// <summary>
-        /// 
+        /// Generate code using given settings
         /// </summary>
         /// <param name="settings"></param>
-        public static void Generate(NGenSettings settings)
+        public static void Generate(CGenSettings settings)
         {
-            
-            var fileContent = new StringBuilder();
-            var templates = Templates.All(settings);
-            var dalTemplate = templates["DAL"];
+            if(!Directory.Exists(settings.PathToProjectFolder))
+                throw new Exception("Folder does not exists");
 
-            //Core
-            var iconnectionManager = templates["ICONNECTIONMANAGER"];
-            var iconnectionContainer = templates["ICONNECTIONCONTAINER"];
-            var idbContext = templates["IDBCONTEXT"];
-
-            dalTemplate.Set("iConnectionManager", iconnectionManager.Build())
-                .Set("iConnctionContainer",iconnectionContainer.Build())
-                .Set("iDbContext",idbContext.Build());
+            var template = new DALTemplate(settings);
+            var dal = template.TransformText();
+            File.WriteAllText(Path.Combine(settings.PathToProjectFolder,"DAL.cs"),dal);
         }
     }
 }

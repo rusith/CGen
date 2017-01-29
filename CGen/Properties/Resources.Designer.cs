@@ -59,46 +59,5 @@ namespace CGen.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 
-        ///##DAL
-        ///namespace $projectNs$
-        ///{
-        ///	namespace $projectNs$.Base 
-        ///	{
-        ///		namespace $projectNs$.Base.Core
-        ///		{
-        ///			$iConnctionContainer$
-        ///			$iConnectionManager$
-        ///			$iDbContext$
-        ///			$iUnitOfWork$
-        ///		}
-        ///
-        ///		namespace $projectNs$.Base.Implementation
-        ///		{
-        ///			$boCollection$
-        ///			$connectionCOntainer$
-        ///			$connectionManager$
-        ///			$context$
-        ///			$unitOfWork$
-        ///		}
-        ///	}
-        ///
-        ///	namespace $projectNs$.Objects
-        ///	{
-        ///		namespace $projectNs$.Objects.Implementation
-        ///		{
-        ///			$bos$
-        ///		}
-        ///		
-        ///		namespace $projectNs$.Objects.SPs
-        ///		{        /// [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string templates {
-            get {
-                return ResourceManager.GetString("templates", resourceCulture);
-            }
-        }
     }
 }

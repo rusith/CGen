@@ -15,11 +15,12 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using Dapper;
+using System.Configuration;
 
 using <#=_settings.ProjectNamespace#>.Base;
-using <#=_settings.ProjectNamespace#>.Filters;
 using <#=_settings.ProjectNamespace#>.Filters.Base;
 using <#=_settings.ProjectNamespace#>.Objects;
+using <#=_settings.ProjectNamespace#>.Filters.ObjectFilters;
 
 namespace <#=_settings.ProjectNamespace#>
 {
@@ -213,12 +214,22 @@ namespace <#=_settings.ProjectNamespace#>
 
 	namespace Objects
     {
+        internal delegate void PropertyChangeHandler(ObjectBase obj, string property); 
+
 	    public abstract class ObjectBase
         {
-            protected TestingDataAccessContext DALObjectBaseContext;
-            internal ObjectState State { get; set; }
+            protected TestingDataAccessContext ___context;
+            internal ObjectState  ___status { get; set; }
+			
+			internal event PropertyChangeHandler ___propertyChanged;
+			
+			protected void ___pc(string propertyName)
+			{
+				if(___status == ObjectState.InDatabase && ___propertyChanged != null)
+                    ___propertyChanged.Invoke(this, propertyName);	
+			}
 
-            internal virtual void Copy(ObjectBase obj)
+			internal virtual void Copy(ObjectBase obj)
             {
                 
             }
@@ -226,9 +237,9 @@ namespace <#=_settings.ProjectNamespace#>
 
 		public enum ObjectState
         {
-            Normal =1,
-            InDatabase =2,
-            Deleted = 3
+            Normal = 1,
+            InDatabase = 2,
+            Deleted =  3
         }
 
 		<# foreach(var table in schema.Tables) {#>
@@ -246,9 +257,8 @@ namespace <#=_settings.ProjectNamespace#>
 			private <#=column.GetDataType(false)#> <#=column.GetFieldName(false)#>;
 			<#}#>
 
-
 			<#foreach(var column in table.Columns){#>
-			public <#=column.GetDataType(true)#> <#=column.Name#> { get; set; } 
+			public <#=column.GetDataType(true)#> <#=column.Name#> { get { return <#=column.GetFieldName()#>; } set { <#=column.GetFieldName()#> = value; ___pc("<#=column.Name#>"); } } 
 			<#}#>
 
 			<#foreach(var column in forignKeyColumns){#>
@@ -256,12 +266,8 @@ namespace <#=_settings.ProjectNamespace#>
 			{ 
 				get
 				{
-					return <#=column.GetFieldName(true)#> ?? (<#=column.GetFieldName(true)#> = DALObjectBaseContext.Get<<#=column.ForeignKeyTable.Name#>>("<#=column.ForeignKeyTable.Name#>", "<#=column.ForeignKeyTable.PrimaryKeyColumn.Name#>", <#=column.ForeignKeyTable.Name#>));
+					return <#=column.GetFieldName(false)#> ?? (<#=column.GetFieldName(false)#> = ___context.Get<<#=column.ForeignKeyTable.Name#>>("<#=column.ForeignKeyTable.Name#>", "<#=column.ForeignKeyTable.PrimaryKeyColumn.Name#>", <#=column.Name#>));
 				}
-				set
-				{
-					//to be added
-				} 
 			}
 			<#}#>
 
@@ -270,7 +276,7 @@ namespace <#=_settings.ProjectNamespace#>
             /// </summary>
             public <#=table.Name#>()
             {
-                DALObjectBaseContext = DatabaseConnectionManager.GetLastContext();
+                ___context = DatabaseConnectionManager.GetLastContext();
             }
 
 			<#DatabaseColumn primaryKeyColumn = null ;#>
@@ -284,7 +290,7 @@ namespace <#=_settings.ProjectNamespace#>
 					return null;
 
                 var obj = context.Get<<#=table.Name#>>("<#=table.Name#>", "<#=primaryKeyColumn.Name#>", <#=key#>);
-                obj.State = ObjectState.InDatabase;
+                obj.___status = ObjectState.InDatabase;
                 return obj;
             }
 			<#}#>
@@ -308,8 +314,28 @@ namespace <#=_settings.ProjectNamespace#>
                 foreach (var obj in objects)
                     ObjectCache.Add("<#=table.Name#>",obj.<#=primaryKeyColumn.Name#>.ToString(),obj);
                 return objects;
-            } 
+            }
+		<# 
+		var referencedTables = schema.Tables.Where(t => t.Columns.Count(c => table != null && (c.IsForeignKey && c.ForeignKeyTableName == table.Name)) > 0);
+
+		foreach(var rtable in referencedTables)
+		{
+			var fk = rtable.ForeignKeys.FirstOrDefault(f => f.ReferencedTable(schema) == table);
+            
+			if(fk == null)
+                continue;
+				#>
+			public List<<#=rtable.Name#>> All<#=rtable.Name#>WhereThisIs<#=table.Name#>
+			{
+				get 
+				{
+					return <#=rtable.Name#>.Get().<#=fk.Name#>.Equals(<#=primaryKeyColumn.Name#>).Parent.Filter();
+				}
+			}
+		<#}#>
+
         }	
+		
 		<#}/*for each table*/#>
 
 	}

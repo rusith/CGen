@@ -21,7 +21,7 @@ namespace CGen.Templates
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+    #line 1 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "14.0.0.0")]
     public partial class DALTemplate : DALTemplateBase
     {
@@ -35,35 +35,35 @@ namespace CGen.Templates
                     "ystem.Data.SqlClient;\r\nusing System.Linq;\r\nusing System.Text;\r\nusing Dapper;\r\nus" +
                     "ing System.Configuration;\r\n\r\nusing ");
             
-            #line 20 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 20 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(_settings.ProjectNamespace));
             
             #line default
             #line hidden
             this.Write(".Base;\r\nusing ");
             
-            #line 21 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 21 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(_settings.ProjectNamespace));
             
             #line default
             #line hidden
             this.Write(".Filters.Base;\r\nusing ");
             
-            #line 22 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 22 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(_settings.ProjectNamespace));
             
             #line default
             #line hidden
             this.Write(".Objects;\r\nusing ");
             
-            #line 23 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 23 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(_settings.ProjectNamespace));
             
             #line default
             #line hidden
             this.Write(".Filters.ObjectFilters;\r\n\r\nnamespace ");
             
-            #line 25 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 25 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(_settings.ProjectNamespace));
             
             #line default
@@ -94,7 +94,7 @@ namespace CGen.Templates
                     "   if (_connection == null)\r\n                {\r\n                    var connecct" +
                     "ionstring = ConfigurationManager.ConnectionStrings[\"");
             
-            #line 80 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 80 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(_settings.ProjectName));
             
             #line default
@@ -164,7 +164,7 @@ namespace CGen.Templates
                     "ose()\r\n            {\r\n                DatabaseConnectionManager.IamDisposing(thi" +
                     "s);\r\n            }\r\n\r\n            #endregion\r\n        }\r\n\t}\r\n\r\n\t");
             
-            #line 210 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 210 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
  
 	var databaseReader = new DatabaseReader(_settings.ConnectionString, "System.Data.SqlClient");
 	var schema = databaseReader.ReadAll();
@@ -205,21 +205,21 @@ namespace CGen.Templates
 
 		");
             
-            #line 245 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 245 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
  foreach(var table in schema.Tables) {
             
             #line default
             #line hidden
             this.Write("\t\tpublic class ");
             
-            #line 246 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 246 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
             
             #line default
             #line hidden
             this.Write(" : ObjectBase\r\n        {\r\n\t\t\t");
             
-            #line 248 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 248 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
 
 			var forignKeyColumns = table.Columns.Where(c => c.IsForeignKey).ToList();
 			
@@ -228,189 +228,189 @@ namespace CGen.Templates
             #line hidden
             this.Write("\r\n\t\t\t");
             
-            #line 252 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 252 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
 foreach(var column in table.Columns){
             
             #line default
             #line hidden
             this.Write("\t\t\tprivate ");
             
-            #line 253 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 253 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(column.GetDataType(true)));
             
             #line default
             #line hidden
             this.Write(" ");
             
-            #line 253 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 253 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(column.GetFieldName(true)));
             
             #line default
             #line hidden
             this.Write(";\r\n\t\t\t");
             
-            #line 254 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 254 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
 }
             
             #line default
             #line hidden
             this.Write("\r\n\t\t\t");
             
-            #line 256 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 256 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
 foreach(var column in forignKeyColumns){
             
             #line default
             #line hidden
             this.Write("\t\t\tprivate ");
             
-            #line 257 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 257 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(column.GetDataType(false)));
             
             #line default
             #line hidden
             this.Write(" ");
             
-            #line 257 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 257 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(column.GetFieldName(false)));
             
             #line default
             #line hidden
             this.Write(";\r\n\t\t\t");
             
-            #line 258 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 258 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
 }
             
             #line default
             #line hidden
             this.Write("\r\n\t\t\t");
             
-            #line 260 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 260 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
 foreach(var column in table.Columns){
             
             #line default
             #line hidden
             this.Write("\t\t\tpublic ");
             
-            #line 261 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 261 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(column.GetDataType(true)));
             
             #line default
             #line hidden
             this.Write(" ");
             
-            #line 261 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 261 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
             
             #line default
             #line hidden
             this.Write(" { get { return ");
             
-            #line 261 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 261 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(column.GetFieldName()));
             
             #line default
             #line hidden
             this.Write("; } set { ");
             
-            #line 261 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 261 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(column.GetFieldName()));
             
             #line default
             #line hidden
             this.Write(" = value; ___pc(\"");
             
-            #line 261 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 261 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
             
             #line default
             #line hidden
             this.Write("\"); } } \r\n\t\t\t");
             
-            #line 262 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 262 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
 }
             
             #line default
             #line hidden
             this.Write("\r\n\t\t\t");
             
-            #line 264 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 264 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
 foreach(var column in forignKeyColumns){
             
             #line default
             #line hidden
             this.Write("\t\t\tpublic ");
             
-            #line 265 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 265 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(column.GetDataType(false)));
             
             #line default
             #line hidden
             this.Write(" ");
             
-            #line 265 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 265 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture("Obj"+column.Name));
             
             #line default
             #line hidden
             this.Write(" \r\n\t\t\t{ \r\n\t\t\t\tget\r\n\t\t\t\t{\r\n\t\t\t\t\treturn ");
             
-            #line 269 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 269 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(column.GetFieldName(false)));
             
             #line default
             #line hidden
             this.Write(" ?? (");
             
-            #line 269 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 269 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(column.GetFieldName(false)));
             
             #line default
             #line hidden
             this.Write(" = ___context.Get<");
             
-            #line 269 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 269 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(column.ForeignKeyTable.Name));
             
             #line default
             #line hidden
             this.Write(">(\"");
             
-            #line 269 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 269 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(column.ForeignKeyTable.Name));
             
             #line default
             #line hidden
             this.Write("\", \"");
             
-            #line 269 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 269 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(column.ForeignKeyTable.PrimaryKeyColumn.Name));
             
             #line default
             #line hidden
             this.Write("\", ");
             
-            #line 269 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 269 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
             
             #line default
             #line hidden
             this.Write("));\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t\t");
             
-            #line 272 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 272 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
 }
             
             #line default
             #line hidden
             this.Write("\r\n            /// <summary>\r\n            /// Creates new ");
             
-            #line 275 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 275 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
             
             #line default
             #line hidden
             this.Write(" object using latest context \r\n            /// </summary>\r\n            public ");
             
-            #line 277 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 277 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
             
             #line default
@@ -418,49 +418,49 @@ foreach(var column in forignKeyColumns){
             this.Write("()\r\n            {\r\n                ___context = DatabaseConnectionManager.GetLast" +
                     "Context();\r\n            }\r\n\r\n\t\t\t");
             
-            #line 282 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 282 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
 DatabaseColumn primaryKeyColumn = null ;
             
             #line default
             #line hidden
             this.Write("\t\t\t");
             
-            #line 283 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 283 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
 if(table.PrimaryKeyColumn != null){
             
             #line default
             #line hidden
             this.Write("\t\t\t\t");
             
-            #line 284 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 284 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
 primaryKeyColumn = table.PrimaryKeyColumn;
             
             #line default
             #line hidden
             this.Write("\t\t\t\t");
             
-            #line 285 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 285 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
 var key = primaryKeyColumn.Name.FirstCharLower();
             
             #line default
             #line hidden
             this.Write("\t\t\tpublic static ");
             
-            #line 286 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 286 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
             
             #line default
             #line hidden
             this.Write(" Get(");
             
-            #line 286 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 286 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(primaryKeyColumn.DataType.NetDataTypeCSharpName));
             
             #line default
             #line hidden
             this.Write(" ");
             
-            #line 286 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 286 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(key));
             
             #line default
@@ -469,28 +469,28 @@ var key = primaryKeyColumn.Name.FirstCharLower();
                     "Context();\r\n\t\t\t\tif(context==null)\r\n\t\t\t\t\treturn null;\r\n\r\n                var obj " +
                     "= context.Get<");
             
-            #line 292 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 292 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
             
             #line default
             #line hidden
             this.Write(">(\"");
             
-            #line 292 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 292 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
             
             #line default
             #line hidden
             this.Write("\", \"");
             
-            #line 292 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 292 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(primaryKeyColumn.Name));
             
             #line default
             #line hidden
             this.Write("\", ");
             
-            #line 292 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 292 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(key));
             
             #line default
@@ -498,42 +498,42 @@ var key = primaryKeyColumn.Name.FirstCharLower();
             this.Write(");\r\n                obj.___status = ObjectState.InDatabase;\r\n                retu" +
                     "rn obj;\r\n            }\r\n\t\t\t");
             
-            #line 296 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 296 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
 }
             
             #line default
             #line hidden
             this.Write("           \r\n\r\n            public static ");
             
-            #line 299 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 299 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
             
             #line default
             #line hidden
             this.Write("Filter Get()\r\n            {\r\n                return new ");
             
-            #line 301 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 301 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
             
             #line default
             #line hidden
             this.Write("Filter();\r\n            }\r\n\r\n\t\t\t");
             
-            #line 304 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 304 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
 var tableNameFirstCharLower= table.Name.FirstCharLower();
             
             #line default
             #line hidden
             this.Write("            public static void Delete(");
             
-            #line 305 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 305 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
             
             #line default
             #line hidden
             this.Write(" ");
             
-            #line 305 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 305 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(tableNameFirstCharLower));
             
             #line default
@@ -541,7 +541,7 @@ var tableNameFirstCharLower= table.Name.FirstCharLower();
             this.Write("ToDelete)\r\n            {\r\n\t\t\t\t//to be implemented\r\n            }\r\n\r\n            i" +
                     "nternal static List<");
             
-            #line 310 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 310 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
             
             #line default
@@ -550,14 +550,14 @@ var tableNameFirstCharLower= table.Name.FirstCharLower();
                     "text = DatabaseConnectionManager.GetLastContext();\r\n                var objects " +
                     "= context.Get<");
             
-            #line 313 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 313 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
             
             #line default
             #line hidden
             this.Write(">(\"");
             
-            #line 313 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 313 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
             
             #line default
@@ -565,21 +565,21 @@ var tableNameFirstCharLower= table.Name.FirstCharLower();
             this.Write("\",filters,limit);\r\n                foreach (var obj in objects)\r\n                " +
                     "    ObjectCache.Add(\"");
             
-            #line 315 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 315 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
             
             #line default
             #line hidden
             this.Write("\",obj.");
             
-            #line 315 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 315 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(primaryKeyColumn.Name));
             
             #line default
             #line hidden
             this.Write(".ToString(),obj);\r\n                return objects;\r\n            }\r\n\t\t");
             
-            #line 318 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 318 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
  
 		var referencedTables = schema.Tables.Where(t => t.Columns.Count(c => table != null && (c.IsForeignKey && c.ForeignKeyTableName == table.Name)) > 0);
 
@@ -595,56 +595,56 @@ var tableNameFirstCharLower= table.Name.FirstCharLower();
             #line hidden
             this.Write("\t\t\tpublic List<");
             
-            #line 328 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 328 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(rtable.Name));
             
             #line default
             #line hidden
             this.Write("> All");
             
-            #line 328 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 328 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(rtable.Name));
             
             #line default
             #line hidden
             this.Write("WhereThisIs");
             
-            #line 328 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 328 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
             
             #line default
             #line hidden
             this.Write("\r\n\t\t\t{\r\n\t\t\t\tget \r\n\t\t\t\t{\r\n\t\t\t\t\treturn ");
             
-            #line 332 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 332 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(rtable.Name));
             
             #line default
             #line hidden
             this.Write(".Get().");
             
-            #line 332 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 332 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(fk.Name));
             
             #line default
             #line hidden
             this.Write(".Equals(");
             
-            #line 332 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 332 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(primaryKeyColumn.Name));
             
             #line default
             #line hidden
             this.Write(").Parent.Filter();\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t");
             
-            #line 335 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 335 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
 }
             
             #line default
             #line hidden
             this.Write("\r\n        }\t\r\n\t\t\r\n\t\t");
             
-            #line 339 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 339 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
 }/*for each table*/
             
             #line default
@@ -760,7 +760,7 @@ var tableNameFirstCharLower= table.Name.FirstCharLower();
                     "  public TP Parent { get; }\r\n            }\r\n\t\t}\r\n\r\n\t\tnamespace ObjectFilters\r\n\t\t" +
                     "{\r\n\t\t\t");
             
-            #line 562 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 562 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
 foreach(var table in schema.Tables ){
 			var tableName = table.Name;
 			
@@ -769,7 +769,7 @@ foreach(var table in schema.Tables ){
             #line hidden
             this.Write("\t\t\t\r\n\t\t\tpublic class ");
             
-            #line 566 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 566 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(tableName));
             
             #line default
@@ -777,7 +777,7 @@ foreach(var table in schema.Tables ){
             this.Write("Filter\r\n\t\t\t{\r\n\t\t\t\tinternal readonly Stack<Filter> Filters = new Stack<Filter>(); " +
                     "\r\n\r\n\t\t\t\t");
             
-            #line 570 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 570 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
 foreach(var column in table.Columns){
 					var dataType = column.DataType.NetDataTypeCSharpName;
 				
@@ -786,21 +786,21 @@ foreach(var column in table.Columns){
             #line hidden
             this.Write("\r\n\t\t\t\t");
             
-            #line 574 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 574 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
 if(dataType == "string"){
             
             #line default
             #line hidden
             this.Write("\t\t\t\tpublic StringFilter<");
             
-            #line 575 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 575 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(tableName));
             
             #line default
             #line hidden
             this.Write("Filter> ");
             
-            #line 575 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 575 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
             
             #line default
@@ -818,35 +818,35 @@ if(dataType == "string"){
 						Filters.Push(new AndFilter());
 						var filter = new StringFilter<");
             
-            #line 586 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 586 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(tableName));
             
             #line default
             #line hidden
             this.Write("Filter>(this,\"");
             
-            #line 586 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 586 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
             
             #line default
             #line hidden
             this.Write("\");\r\n\t\t\t\t\t\tFilters.Push(filter);\r\n\t\t\t\t\t\treturn filter;\r\n\t\t\t\t\t}\r\n\t\t\t\t}\r\n\t\t\t\t");
             
-            #line 591 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 591 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
 } else if(dataType == "int" || dataType == "short" || dataType == "long" || dataType == "double" || dataType == "decimal" ||  dataType == "float" ){
             
             #line default
             #line hidden
             this.Write("\t\t\t\tpublic NumberFilter<");
             
-            #line 592 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 592 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(tableName));
             
             #line default
             #line hidden
             this.Write("Filter,int> ");
             
-            #line 592 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 592 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
             
             #line default
@@ -854,35 +854,35 @@ if(dataType == "string"){
             this.Write("\r\n\t\t\t\t{\r\n\t\t\t\t\tget\r\n\t\t\t\t\t{\r\n\t\t\t\t\t\tFilters.Push(new AndFilter());\r\n\t\t\t\t\t\tvar filter" +
                     " = new NumberFilter<");
             
-            #line 597 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 597 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(tableName));
             
             #line default
             #line hidden
             this.Write("Filter,int>(this,\"");
             
-            #line 597 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 597 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
             
             #line default
             #line hidden
             this.Write("\");\r\n\t\t\t\t\t\tFilters.Push(filter);\r\n\t\t\t\t\t\treturn filter;\r\n\t\t\t\t\t}\r\n\t\t\t\t}\r\n\t\t\t\t");
             
-            #line 602 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 602 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
 }
             
             #line default
             #line hidden
             this.Write("\t\t\t\t");
             
-            #line 603 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 603 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
 }
             
             #line default
             #line hidden
             this.Write("\t\t\t\tpublic ");
             
-            #line 604 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 604 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(tableName));
             
             #line default
@@ -891,21 +891,21 @@ if(dataType == "string"){
                     "\treturn this;\r\n\r\n\t\t\t\t\t\tFilters.Push(new OrFilter());\r\n\t\t\t\t\t\treturn this;\r\n\t\t\t\t\t}" +
                     "\r\n\t\t\t\t}\r\n\r\n\t\t\t\tpublic List<");
             
-            #line 616 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 616 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(tableName));
             
             #line default
             #line hidden
             this.Write("> Filter(int limit = 0)\r\n\t\t\t\t{\r\n\t\t\t\t\treturn ");
             
-            #line 618 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 618 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(tableName));
             
             #line default
             #line hidden
             this.Write(".Filter(Filters,limit);\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t\t");
             
-            #line 621 "F:\Projects\CGen\CGen\Templates\DALTemplate.tt"
+            #line 621 "D:\Projects\CGen\CGen\Templates\DALTemplate.tt"
 } /*for each table */
             
             #line default
